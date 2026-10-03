@@ -1,0 +1,36 @@
+{
+  "id": "chatgpt-statement-lens",
+  "title": "Statement Lens",
+  "number": 10,
+  "port": 3210,
+  "symbol": "S",
+  "nav": "年度财报比率",
+  "eyebrow": "FINANCIAL STATEMENTS, IN CONTEXT.",
+  "headline": "不只看一个数字，也看它的口径。",
+  "description": "导入年度公司财务数据，核对收入增长、盈利能力、流动性与杠杆，把缺失项和异常口径一并呈现。",
+  "features": [
+    "自然年全年报表，最多10家公司分开查看",
+    "8项财务比率与连续年度收入增长",
+    "公司与年度切换、原值和缺失原因核对",
+    "利润轨迹、资产恒等式检查及报告导出"
+  ],
+  "steps": [
+    "使用模板的16列表头导入 CSV，company/year/currency/unit 必填；unit 为 ones/thousands/millions。",
+    "只输入自然年1月1日至12月31日的完整年度数据，季度、TTM和非自然财年不适用。",
+    "同一公司所有年份使用相同币种、单位及利润权益归属口径；缺失金额留空，不写0代替。",
+    "运行后切换公司与年度查看比率、计算原因及原始金额，导出完整报告。"
+  ],
+  "source": {
+    "name": "openbq-org/OpenBB",
+    "url": "https://github.com/openbq-org/OpenBB",
+    "stars": 73802,
+    "pushed": "2026-10-02",
+    "license": "Apache-2.0",
+    "description": "Open Data Platform by OpenBB，统一金融数据与分析接口，涵盖财务报表和金融比率等标准数据模型。",
+    "scope": "独立复刻财务比率分析工作台，使用示例或导入的公司财务数据，计算收入增长、利润率、流动比率、负债与权益等有明确口径的指标并作跨期比较。说明缺失项和零分母，不自动补造数据，不接付费数据商，不提供股票估值结论、推荐交易或复刻商业 OpenBB Workspace。"
+  },
+  "scope": "独立复刻财务比率分析工作台，使用示例或导入的公司财务数据，计算收入增长、利润率、流动比率、负债与权益等有明确口径的指标并作跨期比较。说明缺失项和零分母，不自动补造数据，不接付费数据商，不提供股票估值结论、推荐交易或复刻商业 OpenBB Workspace。 本版本进一步限定为自然年全年报表；公司间不跨币种或单位加总。",
+  "storage": "输入和结果仅在当前页面使用，不获取实时行情、证券估值或付费财务数据。",
+  "transmission": "模型只接收公司名称、币种/单位、年份、已经计算的比率、增长率和缺失原因，不发送原始报表金额。",
+  "formulas": "毛利率=(收入−销货成本)/收入；营业利润率=营业利润/收入；净利率=净利润/收入。流动比率=流动资产/流动负债。总负债/权益与有息债务/权益分别计算，不能混为一个 debt ratio。ROA=净利润/平均总资产；ROE=净利润/平均权益，平均值需同一年度的期初与期末数据；未提供期初则不以期末替代。有息债务需自行采用一致范围，包括租赁时避免和借款重复；利润及权益归属须一致，不拆优先股或少数股东。分母非正、字段缺失或数值溢出时指标为空并附原因；亏损在有效分母下保留负比率。收入增长仅对连续两年、上年收入>0计算。每家公司内币种单位必须一致，不自动换算。资产=负债+权益检查使用1e-6×max(1,各余额绝对值)容差，仅提示不改原值；年度期初与上期期末不一致提示核对重述。输入金额绝对值不超过1e15，年份1900–2100。参考 [SEC财报指南](https://www.sec.gov/about/reports-publications/beginners-guide-financial-statements) 和 [OpenStax财务分析教材](https://openstax.org/books/principles-financial-accounting/pages/a-financial-statement-analysis)。"
+}

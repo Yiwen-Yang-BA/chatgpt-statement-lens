@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="导入年度公司财务数据，核对收入增长、盈利能力、流动性与杠杆，把缺失项和异常口径一并呈现。"
+    />
+    <title>Statement Lens · AI 小工具</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/data.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand"><span class="logo">S</span>Statement Lens</div>
+        <div class="side-intro">
+          <div class="eyebrow">DATA & FINANCE STUDIO</div>
+          <div class="nav-item">年度财报比率</div>
+        </div>
+        <div class="side-note">
+          把一个想法，变成可以使用的结果。<br />轻量、专注，按你的节奏。
+        </div>
+        <div class="side-bottom">
+          <div class="eyebrow">CONNECTION</div>
+          <label
+            ><span class="sr-only" hidden>运行模式</span
+            ><select id="mode" aria-label="运行模式"></select
+          ></label>
+        </div>
+        <div class="side-footer">
+          DATA EDITION / 10<br />Built for a little more clarity.
+        </div>
+      </aside>
+      <main class="main">
+        <header class="topbar">
+          <span class="crumb">我的工作台 &nbsp; / &nbsp; 年度财报比率</span
+          ><span class="top-meta"
+            ><i class="dot"></i><span id="connection">正在连接…</span></span
+          >
+        </header>
+        <section class="hero">
+          <div class="eyebrow">FINANCIAL STATEMENTS, IN CONTEXT.</div>
+          <h1>不只看一个数字，也看它的口径。</h1>
+          <p class="description">
+            导入年度公司财务数据，核对收入增长、盈利能力、流动性与杠杆，把缺失项和异常口径一并呈现。
+          </p>
+        </section>
+        <section class="data-layout">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>年度报表输入</h2>
+              <button id="sample" class="small">两公司示例</button>
+            </div>
+            <p class="source-note">虚构公司 · 自然年全年数据 · 非投资建议</p>
+            <form id="statement-form">
+              <label
+                >报表 CSV<textarea
+                  id="csv"
+                  rows="20"
+                  maxlength="250000"
+                  required
+                  spellcheck="false"
+                  wrap="off"
+                  placeholder="company,year,currency,unit,revenue,costOfRevenue,…"
+                ></textarea></label
+              ><input
+                id="file"
+                type="file"
+                class="upload-input"
+                accept=".csv"
+                aria-label="导入财报CSV"
+              />
+              <div class="toolbar" style="margin-top: 16px">
+                <button id="analyze" class="primary">计算财务比率 ↗</button
+                ><button id="template" type="button" class="small">
+                  下载空模板
+                </button>
+              </div>
+            </form>
+            <div class="divider"></div>
+            <p class="hint">
+              缺失金额留空。净利润、营业利润与权益可为负；收入、成本、资产及负债需非负。
+            </p>
+            <details>
+              <summary>字段与口径</summary>
+              <p class="hint">
+                company 公司；year 年度；currency 币种（CNY/USD/EUR）；unit
+                金额单位（ones/thousands/millions）。<br />revenue
+                收入；costOfRevenue 销货成本；operatingIncome
+                营业利润；netIncome 净利润。<br />currentAssets /
+                currentLiabilities 流动资产/负债；totalLiabilities
+                总负债；interestBearingDebt 有息债务。<br />assetsBegin /
+                assetsEnd 期初/期末总资产；equityBegin / equityEnd
+                期初/期末权益。
+              </p>
+            </details>
+          </section>
+          <div>
+            <section class="panel data-panel" style="margin-bottom: 22px">
+              <div
+                class="wide-controls"
+                style="grid-template-columns: 1fr 1fr; margin: 0"
+              >
+                <label
+                  >公司<select id="company" disabled>
+                    <option>分析后选择</option>
+                  </select></label
+                ><label
+                  >年度<select id="year" disabled>
+                    <option>分析后选择</option>
+                  </select></label
+                >
+              </div>
+              <p id="scope" class="hint">每家公司单独查看，不跨币种合计。</p>
+            </section>
+            <div id="metrics" class="metric-grid"></div>
+            <section class="panel data-panel">
+              <div class="result-title">
+                <h2>收入与利润轨迹</h2>
+                <span id="unit-label" class="chip">ANNUAL STATEMENTS</span>
+              </div>
+              <div id="income-chart" class="chart-wrap">
+                <div class="empty">
+                  <div class="symbol">▥</div>
+                  <h3>连起来看，也逐项核对</h3>
+                  <p>加载示例，查看利润率与资产负债口径。</p>
+                </div>
+              </div>
+            </section>
+            <section class="panel data-panel">
+              <h2>所选年度的比率与原因</h2>
+              <div id="ratio-table" class="table-wrap"></div>
+              <p id="issues" class="warning-list"></p>
+            </section>
+            <section class="panel data-panel">
+              <h2>原始报表金额</h2>
+              <div id="values-table" class="table-wrap"></div>
+            </section>
+            <section class="panel data-panel">
+              <h2>本次数据集解读</h2>
+              <p id="warnings" class="warning-list"></p>
+              <div id="meta" class="meta"></div>
+              <div id="insight" class="insight">
+                缺失项不补造，零分母不强算。
+              </div>
+              <div id="exports" class="toolbar" hidden>
+                <button id="export-html" class="primary">
+                  导出全部 HTML 报告</button
+                ><button id="export-csv" class="small">导出全部比率 CSV</button
+                ><button id="export-json" class="small">导出 JSON</button>
+              </div>
+            </section>
+          </div>
+        </section>
+        <footer class="footer">
+          <span>Statement Lens · 独立轻量实现</span
+          ><span
+            >灵感来自
+            <a
+              href="https://github.com/openbq-org/OpenBB"
+              target="_blank"
+              rel="noopener noreferrer"
+              >openbq-org/OpenBB</a
+            >
+            &nbsp; / &nbsp; 10 OF 10</span
+          >
+        </footer>
+      </main>
+    </div>
+    <div id="toast" role="status" aria-live="polite" hidden></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

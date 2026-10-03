@@ -1,0 +1,17 @@
+{
+  "name": "chatgpt-statement-lens",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "导入年度公司财务数据，核对收入增长、盈利能力、流动性与杠杆，把缺失项和异常口径一并呈现。",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.mjs",
+    "dev": "node --watch --env-file-if-exists=.env server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check server.mjs && node --check project.mjs && node --check public/app.js"
+  },
+  "license": "MIT"
+}
